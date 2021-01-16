@@ -1,6 +1,9 @@
 #ifndef __SIMPLE_TEST_LIBRARY_HEADER_FILE_INCLUDED__
 #define __SIMPLE_TEST_LIBRARY_HEADER_FILE_INCLUDED__
 
+#include <stdio.h>
+#include <stdlib.h>
+
 typedef enum {
 	BLACK = 30,
 	RED,
@@ -50,14 +53,14 @@ typedef enum {
 	if (__dbs)
 
 #define st_log(...) \
-	FILE *__lstream = fopen(__st_name, "a+"); \
+	{ FILE *__lstream = fopen(__st_name, "a+"); \
 	if (!__lstream) { \
 		st_color(RED); \
 		printf("*** %s: logging error\n", __st_name); \
 		st_color_norm(); \
 	} \
 	fprintf(__lstream, __VA_ARGS__); \
-	fclose(__lstream)
+	fclose(__lstream); }
 
 #define st_logf(msg) \
 	st_log("%s <%d>: %s\n", __func__, __LINE__, msg)
