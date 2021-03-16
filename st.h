@@ -54,15 +54,32 @@ typedef enum {
 
 #define st_log(...) \
 	{ FILE *__lstream = fopen(__st_name, "a+"); \
-	if (!__lstream) { \
-		st_color(RED); \
-		printf("*** %s: logging error\n", __st_name); \
-		st_color_norm(); \
-	} \
-	fprintf(__lstream, __VA_ARGS__); \
-	fclose(__lstream); }
+		if (!__lstream) { \
+			st_color(RED); \
+			printf("*** %s: logging error\n", __st_name); \
+			st_color_norm(); \
+		} \
+		if (__dbs) { \
+			fprintf(__lstream, __VA_ARGS__); \
+			fclose(__lstream); \
+		} \
+	}
 
 #define st_logf(msg) \
 	st_log("%s <%d>: %s\n", __func__, __LINE__, msg)
+
+#define st_to_str(sym) #sym
+
+#define st_call(func, ...) \
+	st_log("%s: <%d> called\n", st_to_str(func), __LINE__); \
+	func (__VA_ARGS__);
+
+#define st_alloc(size) \
+	malloc(size); \
+	st_log("%s: <%d> allocated %d-bit memory\n", "malloc", __LINE__, size);
+
+#define st_free(ptr) \
+	free(ptr); \
+	st_log("%s: <%d> released memory at the address %p\n", "free", __LINE__, ptr);
 
 #endif
