@@ -70,19 +70,18 @@ typedef enum {
 #define st_logf(msg) \
 	st_log("%s <%d>: %s\n", __func__, __LINE__, msg)
 
+#define st_to_str(sym) #sym
+
+#define st_call(func, ...) \
+	st_log("%s: <%d> called\n", st_to_str(func), __LINE__); \
+	func (__VA_ARGS__);
+
 #define st_alloc(size) \
 	malloc(size); \
-	st_log("%s: malloc %d-bit memory allocation\n", __func__, size) \
+	st_log("%s: <%d> allocated %d-bit memory\n", "malloc", __LINE__, size);
 
 #define st_free(ptr) \
 	free(ptr); \
-	st_log("%s: Freeing up memory with address %p\n", __func__, ptr);
-
-#define st_to_str(sym) \
-	# sym
-
-#define st_call(func, ...) \
-	st_log("%s: <%d> calling a function %s\n", __func__, __LINE__, st_to_str(func)); \
-	func(__VA_ARGS__)
+	st_log("%s: <%d> released memory at the address %p\n", "free", __LINE__, ptr);
 
 #endif

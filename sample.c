@@ -28,13 +28,21 @@ int main() {
 	st_start();
 	st_descr("This is sample usage of st.h");
 
-	st_logf("f1 call");
-	st_step("call f1");
-	f1();
+	char *mem = NULL;
 
-	st_logf("f2 call");
-	st_step("call f2");
-	f2();
+	// call f1 with autologging
+	st_call(f1);
+
+	// call f3 with autologging
+	st_call(f3);
+
+	// allocate memory with autologging
+	mem = st_alloc(1);
+	st_log("%s: <%d> mem=%p\n", __func__, __LINE__, mem);
+	st_free(mem);
+
+	// call f2 with autologging
+	st_call(f2);
 
 	st_call(f3);
 
