@@ -17,6 +17,13 @@ void f2() {
 	}
 }
 
+void f3() {
+	void *ptr = NULL;
+
+	ptr = st_alloc(8);
+	st_free(ptr);
+}
+
 int main() {
 	st_start();
 	st_descr("This is sample usage of st.h");
@@ -28,6 +35,8 @@ int main() {
 	st_logf("f2 call");
 	st_step("call f2");
 	f2();
+
+	st_call(f3);
 
 	st_end();
 	return 0;
