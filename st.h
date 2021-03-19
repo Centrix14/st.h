@@ -21,11 +21,10 @@ typedef enum {
 #define st_name(tname) char *__st_name = tname
 
 #define st_start() \
-	if (__dbs) { \
-		st_color(CYAN); \
+	st_color(CYAN); \
+	if (__dbs) \
 		printf("*** %s start\n", __st_name); \
-		st_color_norm() \
-	}
+	st_color_norm()
 
 #define st_end() \
    	st_color(CYAN); \
