@@ -21,9 +21,11 @@ typedef enum {
 #define st_name(tname) char *__st_name = tname
 
 #define st_start() \
-   	st_color(CYAN); \
-	printf("*** %s start\n", __st_name); \
-	st_color_norm()
+	if (__dbs) { \
+		st_color(CYAN); \
+		printf("*** %s start\n", __st_name); \
+		st_color_norm() \
+	}
 
 #define st_end() \
    	st_color(CYAN); \
@@ -54,15 +56,33 @@ typedef enum {
 
 #define st_log(...) \
 	{ FILE *__lstream = fopen(__st_name, "a+"); \
-	if (!__lstream) { \
-		st_color(RED); \
-		printf("*** %s: logging error\n", __st_name); \
-		st_color_norm(); \
-	} \
-	fprintf(__lstream, __VA_ARGS__); \
-	fclose(__lstream); }
+		if (!__lstream) { \
+			st_color(RED); \
+			printf("*** %s: logging error\n", __st_name); \
+			st_color_norm(); \
+		} \
+		if (__dbs) { \
+			fprintf(__lstream, __VA_ARGS__); \
+			fclose(__lstream); \
+		} \
+	}
 
 #define st_logf(msg) \
 	st_log("%s <%d>: %s\n", __func__, __LINE__, msg)
+
+#define st_alloc(size) \
+	malloc(size); \
+	st_log("%s: malloc %d-bit memory allocation\n", __func__, size) \
+
+#define st_free(ptr) \
+	free(ptr); \
+	st_log("%s: Freeing up memory with address %p\n", __func__, ptr);
+
+#define st_to_str(sym) \
+	# sym
+
+#define st_call(func, ...) \
+	st_log("%s: <%d> calling a function %s\n", __func__, __LINE__, st_to_str(func)); \
+	func(__VA_ARGS__)
 
 #endif
